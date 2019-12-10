@@ -69,7 +69,7 @@ class GameWindow(object):
                 widget = QPushButton()
                 widget.setFixedSize(QSize(self.gridSize / self.size, self.gridSize / self.size))        #a pushbuttonokat méretezi, hogy kitöltsék a pályát
                 font = QFont()
-                font.setPointSize(self.gridSize / (self.size * 1.5))                #a betűméretet átállítja
+                font.setPointSize(self.gridSize / (self.size * 1.5))                #a betűméretet átállítja, a pálya nagyságához képest
                 widget.setFont(font)
                 widget.clicked.connect(partial(self.putMark, widget))       #függvény nem hívható --> referenciát adunk át
                 widget.setStyleSheet("background-color: red; border: 1px solid black")      #a pushbuttonok színét és a határaik színét állítja át
