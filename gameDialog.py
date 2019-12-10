@@ -46,7 +46,7 @@ class GameWindow(object):
 
         self.current_turn = 1                                                               #megadja, hogy épp melyik játékos következik(1 és -1 között vátakozik)
         self.positions = [[0 for i in range(self.size)] for j in range(self.size)]          #a megadott mérethez igazodva csinál rgy mátrixot
-        self.gombok = []                                                                    #???????PUSH BUTTONOK LISTÁJA??????
+        self.gombok = []                                                                    #pushbutton lista
         self.maxMarks = self.size ** 2                                                      #max ennyi lépés van
         self.currentMarks = 0                                                               #számolja, hogy eddig hány lépés volt
         self.gameEnded = False                                                              #ha True akkor vége a játéknak
@@ -71,16 +71,16 @@ class GameWindow(object):
                 font = QFont()
                 font.setPointSize(self.gridSize / self.size)                #a betűméretet átállítja
                 widget.setFont(font)
-                widget.clicked.connect(partial(self.putMark, widget))       #????????????????????????????partial?????????????????????
+                widget.clicked.connect(partial(self.putMark, widget))       #függvény nem hívható --> referenciát adunk át
                 widget.setStyleSheet("background-color: red; border: 1px solid black")      #a pushbuttonok színét és a határaik színét állítja át
-                self.gombok.append(widget)                          #?????????a gombok listához hozzáadja a push buttonokat?????????
-                self.gridLayout.addWidget(widget, i, j)             #????????????????????????????????????
+                self.gombok.append(widget)                          #a gombok listához hozzáadja a push buttonokat
+                self.gridLayout.addWidget(widget, i, j)             #gombok megjelenítése a játékteren (gridlayouton)
 
     def clear(self):
         self.positions = [[0 for i in range(self.size)] for j in range(self.size)]      #az összes pozíciót visszaállítja 0-ra
-        for i in range(self.gridLayout.count()):                                        #végigmegy az összes push buttonon?????
+        for i in range(self.gridLayout.count()):                                        #végigmegy az összes push buttonon
             self.gridLayout.itemAt(i).widget().setText("")                              #a text-jét visszaállítja ""-re
-        self.gameEndDialog.accept()                                                     #????????????????????????
+        self.gameEndDialog.accept()                                                     #meghívja az új játék kezdését
         msgBox = QMessageBox()                                                          #ablakban kiírja, hogy új játék kezdődött
         msgBox.setText("Új játék kezdődött!")
         msgBox.setWindowTitle("INFO")
@@ -198,16 +198,16 @@ class GameWindow(object):
             return True
         return False
 
-    def checkWin1(self, x, y):
-        if x < 4 or y < 4:
+    def checkWin1(self, x, y):                          #jobb alul keresztbe
+        if x < 4 or y < 4:                              #ha az egyik index kisebb, mint 4, akkor nincs nyertes lépés
             return False
 
         for i in range(5):
-            if self.positions[x - i][y - i] != self.current_turn:
-                return False
-        return True
+            if self.positions[x - i][y - i] != self.current_turn:   #végigmegy az átlón és megnézi, hogy az adott játékosnak van-e 5 jele keresztbe
+                return False                                        #ha az egyik helyen 0 vagy a másik játékos jele van, akkor nem nyerhet ezért False
+        return True                                                 #ha egyik teljesül, akkor nyert
 
-    def checkWin2(self, x, y):
+    def checkWin2(self, x, y):                          #bal alul keresztbe
         if x < 4 or y > self.size - 5:
             return False
 
@@ -216,7 +216,7 @@ class GameWindow(object):
                 return False
         return True
 
-    def checkWin3(self, x, y):
+    def checkWin3(self, x, y):                          #jobb felül keresztbe
         if x > self.size - 5 or y < 4:
             return False
 
@@ -225,7 +225,7 @@ class GameWindow(object):
                 return False
         return True
 
-    def checkWin4(self, x, y):
+    def checkWin4(self, x, y):                          #bal felül keresztbe
         if x > self.size - 5 or y > self.size - 5:
             return False
 
@@ -234,7 +234,7 @@ class GameWindow(object):
                 return False
         return True
 
-    def checkWin5(self, x, y):
+    def checkWin5(self, x, y):                          #jobb keresztbe alulról 2.
         if x < 3 or y < 3 or x > self.size - 2 or y > self.size - 2:
             return False
 
@@ -245,7 +245,7 @@ class GameWindow(object):
             return False
         return True
 
-    def checkWin6(self, x, y):
+    def checkWin6(self, x, y):                          #bal keresztbe alulról 2.
         if x < 3 or y > self.size - 4 or x > self.size - 2 or y < 1:
             return False
 
@@ -256,7 +256,7 @@ class GameWindow(object):
             return False
         return True
 
-    def checkWin7(self, x, y):
+    def checkWin7(self, x, y):                          #jobb keresztbe felülről 2.
         if x > self.size - 4 or y < 3 or x < 1 or y > self.size - 2:
             return False
 
@@ -267,7 +267,7 @@ class GameWindow(object):
             return False
         return True
 
-    def checkWin8(self, x, y):
+    def checkWin8(self, x, y):                          #bal keresztbe felülről 2.
         if x > self.size - 4 or y > self.size - 4 or x < 1 or y < 1:
             return False
 
@@ -278,7 +278,7 @@ class GameWindow(object):
             return False
         return True
 
-    def checkWin9(self, x, y):
+    def checkWin9(self, x, y):                          #jobb keresztbe középső
         if x < 2 or y < 2 or x > self.size - 3 or y > self.size - 3:
             return False
 
@@ -287,7 +287,7 @@ class GameWindow(object):
                 return False
         return True
 
-    def checkWin10(self, x, y):
+    def checkWin10(self, x, y):                         #bal keresztbe középső
         if x < 2 or y < 2 or x > self.size - 3 or y > self.size - 3:
             return False
 
@@ -296,7 +296,7 @@ class GameWindow(object):
                 return False
         return True
 
-    def checkWin11(self, x, y):
+    def checkWin11(self, x, y):                         #függőleges legalul
         if x < 4:
             return False
 
@@ -305,7 +305,7 @@ class GameWindow(object):
                 return False
         return True
 
-    def checkWin12(self, x, y):
+    def checkWin12(self, x, y):                         #bal szélen vízszintes
         if y > self.size - 5:
             return False
 
@@ -314,7 +314,7 @@ class GameWindow(object):
                 return False
         return True
 
-    def checkWin13(self, x, y):
+    def checkWin13(self, x, y):                         #függőleges legfelül
         if x > self.size - 5:
             return False
 
@@ -323,7 +323,7 @@ class GameWindow(object):
                 return False
         return True
 
-    def checkWin14(self, x, y):
+    def checkWin14(self, x, y):                        #jobb szélen vízszintes
         if y < 4:
             return False
 
@@ -332,7 +332,7 @@ class GameWindow(object):
                 return False
         return True
 
-    def checkWin15(self, x, y):
+    def checkWin15(self, x, y):                         #alulról 2. függőleges
         if x < 3 or x > self.size - 2:
             return False
 
@@ -343,7 +343,7 @@ class GameWindow(object):
             return False
         return True
 
-    def checkWin16(self, x, y):
+    def checkWin16(self, x, y):                         #jobbról 2. vízszintes
         if y < 1 or y > self.size - 4:
             return False
 
@@ -354,7 +354,7 @@ class GameWindow(object):
             return False
         return True
 
-    def checkWin17(self, x, y):
+    def checkWin17(self, x, y):                         #felülről 2. függőleges
         if x < 1 or x > self.size - 4:
             return False
 
@@ -365,7 +365,7 @@ class GameWindow(object):
             return False
         return True
 
-    def checkWin18(self, x, y):
+    def checkWin18(self, x, y):                         #balról 2. vízszintes
         if y < 3 or y > self.size - 2:
             return False
 
@@ -376,7 +376,7 @@ class GameWindow(object):
             return False
         return True
 
-    def checkWin19(self, x, y):
+    def checkWin19(self, x, y):                         #függőleges középső
         if x < 2 or x > self.size - 3:
             return False
 
@@ -385,7 +385,7 @@ class GameWindow(object):
                 return False
         return True
 
-    def checkWin20(self, x, y):
+    def checkWin20(self, x, y):                         #vízszintes középső
         if y < 2 or y > self.size - 3:
             return False
 
