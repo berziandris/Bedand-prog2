@@ -91,7 +91,7 @@ class GameWindow(object):
 
     def putMark(self, button):
         index = self.gombok.index(button)                       #indexeli a pushbuttonokat
-        x = index // self.size                                  #egész osztással megkapjuk a vízszintes oszlopkat
+        x = index // self.size                                  #egész osztással megkapjuk a vízszintes sorokat
         y = index % self.size                                   #maradékos osztással megkapjuk a függőleges oszlopokat
         if not self.gameEnded:                                  #ha nincs vége a játknak
             if self.positions[x][y] == 0:                       #ha az x és y indexű pushbutton 0 értékű
